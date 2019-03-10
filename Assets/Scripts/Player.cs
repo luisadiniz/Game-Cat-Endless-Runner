@@ -26,7 +26,8 @@ public class Player : MonoBehaviour {
     [SerializeField] private float _slideLength;
 
     [SerializeField] private GameView _gameView;
-    private float _score;
+    public float _score;
+    public int _coins;
 
 	void Start ()
     {
@@ -137,12 +138,21 @@ public class Player : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Coin"))
+        {
+            _coins++;
+            _gameView.UpdateCoinsText(_coins);
+            other.transform.parent.gameObject.SetActive(false);
+        }
+
         if (other.CompareTag("Obstacle"))
         {
             _playerAnimator.SetTrigger("Hit");
             _playerSpeed = 0;
             _playerAnimator.SetBool("Dead", true);
             _gameView.GameOver();
+
+            SaveSystem.SavePlayer(this);
         }
     }
 
