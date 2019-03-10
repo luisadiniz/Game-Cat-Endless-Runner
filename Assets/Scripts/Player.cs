@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     [SerializeField] private float _playerSpeed;
+    [SerializeField] private float _maxPlayerSpeed;
     [SerializeField] private float _laneSpeed;
     [SerializeField] private Rigidbody _rigidBody;
     [SerializeField] private Animator _playerAnimator;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour {
     [SerializeField] private float _slideLength;
 
     [SerializeField] private GameView _gameView;
+    private float _score;
 
 	void Start ()
     {
@@ -84,8 +86,11 @@ public class Player : MonoBehaviour {
             }
         }
 
-    Vector3 targetPositon = new Vector3(_verticalTargetPosition.x, _verticalTargetPosition.y, transform.position.z);
+        Vector3 targetPositon = new Vector3(_verticalTargetPosition.x, _verticalTargetPosition.y, transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, targetPositon, _laneSpeed * Time.deltaTime);
+
+        _score += Time.deltaTime * _playerSpeed;
+        _gameView.UpdateScoreText((int)_score);
     }
 
     private void FixedUpdate()
@@ -138,6 +143,15 @@ public class Player : MonoBehaviour {
             _playerSpeed = 0;
             _playerAnimator.SetBool("Dead", true);
             _gameView.GameOver();
+        }
+    }
+
+    public void IncreaseSpeed()
+    {
+        _playerSpeed *= 1.15f;
+        if (_playerSpeed >= _maxPlayerSpeed)
+        {
+            _playerSpeed = _maxPlayerSpeed;
         }
     }
 }

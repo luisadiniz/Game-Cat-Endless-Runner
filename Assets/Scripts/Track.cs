@@ -9,6 +9,8 @@ public class Track : MonoBehaviour {
 
     [SerializeField] private List<GameObject> NewOstacles;
 
+    [SerializeField] private Player _player;
+
 	void Start ()
     {
         int newRandomNumber = (int)Random.Range(_numberOfObstacles.x, _numberOfObstacles.y);
@@ -37,6 +39,7 @@ public class Track : MonoBehaviour {
     {
         if (other.CompareTag("Player"))
         {
+            _player.IncreaseSpeed();
             transform.position = new Vector3(0, 0, transform.position.z + 297 * 2);
             PositionateObstacles();
         }
